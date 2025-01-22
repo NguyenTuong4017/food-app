@@ -10,8 +10,28 @@ import { StatusBar } from "expo-status-bar";
 import Fontisto from "@expo/vector-icons/Fontisto";
 import Entypo from "@expo/vector-icons/Entypo";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-export default function SearchBox() {
-  const avatarUrl = "assets/avatar.PNG";
+import { useState, useEffect } from "react";
+
+import FoodBox from "./FoodBox";
+
+export default function SearchBox({ mealList, setMealList }) {
+  const [searchedFood, setSearchedFood] = useState("");
+
+  const api = `https://www.themealdb.com/api/json/v1/1/search.php?s=${searchedFood}`;
+
+  const handleFetch = async () => {
+    const response = await fetch(api);
+    const data = await response.json();
+    setMealList(data.meals);
+  };
+
+  const handleReturnPress = () => {
+    handleFetch();
+  };
+  useEffect(() => {
+    handleFetch();
+  }, []);
+
   return (
     <View style={styles.container}>
       {/* avatar, username and notification button */}
@@ -48,7 +68,13 @@ export default function SearchBox() {
             />
           </View>
 
-          <TextInput style={styles.searchBar} placeholder="Search any food" />
+          <TextInput
+            style={styles.searchBar}
+            placeholder="Search any food"
+            onChangeText={(text) => setSearchedFood(text)}
+            onSubmitEditing={handleReturnPress}
+            returnKeyType="done"
+          />
         </View>
 
         <View style={styles.sortButton}>
@@ -111,6 +137,10 @@ const styles = StyleSheet.create({
     height: "100%",
     alignItems: "center",
     justifyContent: "space-around",
+
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
   },
   iconContainer: {
     backgroundColor: "#F7EED3",
@@ -119,6 +149,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 100,
+
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
   },
   bell: {
     color: "#674636",
@@ -144,6 +178,10 @@ const styles = StyleSheet.create({
     borderWidth: 0,
     borderColor: "#674636",
     marginLeft: 13,
+
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
   },
   searchBar: {
     //borderWidth: 1,
@@ -171,6 +209,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     marginRight: 15,
+
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
   },
   sortIcon: {
     color: "#674636",
